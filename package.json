@@ -1,6 +1,7 @@
 {
   "name": "react-bingo",
   "version": "0.1.0",
+  "homepage": "https://zprime0920.github.io/react-bingo",
   "private": true,
   "dependencies": {
     "@types/jest": "24.0.17",
@@ -30,7 +31,9 @@
     "eject": "react-scripts eject",
     "lint:staged": "lint-staged",
     "lint:ts": "tslint -p tsconfig.json -c tslint.json 'src/**/*.+(ts|tsx)'",
-    "lint:ts:fix": "tslint -p tsconfig.json -c tslint.json --fix 'src/**/*.+(ts|tsx)'"
+    "lint:ts:fix": "tslint -p tsconfig.json -c tslint.json --fix 'src/**/*.+(ts|tsx)'",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -55,6 +58,7 @@
     ]
   },
   "devDependencies": {
+    "gh-pages": "2.0",
     "lint-staged": "^9.2.1",
     "pre-commit": "^1.2.2",
     "tslint": "^5.18.0"
