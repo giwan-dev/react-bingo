@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { chunk as _chunk, map as _map, sample as _sample } from 'lodash';
 import styled from 'styled-components';
-import { PlayerData, BingoEntityData } from './typing';
-import { State } from './reducers';
+import { PlayerData, BingoEntityData } from 'typing';
+import { State } from 'reducers';
 import { Dispatch } from 'redux';
-import { addNumber } from './actions';
+import { addNumber } from 'actions';
 import { connect } from 'react-redux';
 import bind from 'bind-decorator';
-import Alert from './Alert';
+import Alert from 'components/Alert';
 
 interface PlayerPropsFromState {
+
 }
 
 interface PlayerPropsFromDispatch {
@@ -122,9 +123,8 @@ class Player extends React.Component<PlayerProps, PlayerState> {
 
     return _map(
       _chunk(player.table, 5),
-      (row, index) => {
-        // TODO: 코드 정리
-        const entityList = _map(row, (entity, index) => {
+      (row, rowIndex) => {
+        const entityList = _map(row, (entity, columnIndex) => {
           const selectable = entity !== null && isActive && !entity.isSelected;
           const onClickHandler = selectable
             // HACK: selectable에 null 아닌거 들어가므로 보장됨
@@ -133,7 +133,7 @@ class Player extends React.Component<PlayerProps, PlayerState> {
 
           return (
             <Td
-              key={entity === null ? index : entity.key}
+              key={`${rowIndex}-${columnIndex}`}
               disabled={!selectable}
               selected={entity !== null && entity.isSelected}
               onClick={onClickHandler}
@@ -144,7 +144,7 @@ class Player extends React.Component<PlayerProps, PlayerState> {
         });
 
         return (
-          <tr key={row.join('-') + index}>
+          <tr key={row.join('-') + rowIndex}>
             {entityList}
           </tr>
         );

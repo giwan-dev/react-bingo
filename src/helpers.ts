@@ -1,4 +1,4 @@
-import { PlayerData, BingoEntityData, BingoTable } from './typing';
+import { PlayerData, BingoEntityData, BingoTable } from 'typing';
 import {
   range as _range,
   map as _map,
@@ -37,7 +37,7 @@ const makeNewBingo = () => _map(_shuffle(_range(25)), num => ({
 /**
  * 새로운 플레이어 목록을 만드는 함수
  */
-export function makeNewPlayers(): PlayerData[] {
+export function initializePlayers(): PlayerData[] {
   return [
     {
       name: 'Player 1',
@@ -59,7 +59,7 @@ export function makeNewPlayers(): PlayerData[] {
  * @param list
  * @param selected
  */
-export function markNewSelected(
+function markNewSelected(
   list: BingoTable,
   selected: number,
 ): BingoTable {
@@ -84,7 +84,7 @@ export function markNewSelected(
  * @param list
  * @param selectd
  */
-export function makeMatchedIndexList(list: BingoTable, selected: number): number[][] {
+function makeMatchedIndexList(list: BingoTable, selected: number): number[][] {
   if (_sample(list) === null) {
     return [];
   }
@@ -96,4 +96,26 @@ export function makeMatchedIndexList(list: BingoTable, selected: number): number
   return BINGO_INDEX_COMBINATION
   .filter(value => value.includes(selectedIndex))
   .filter(combination => _every(_map(combination, index => targetList[index].isSelected)));
+}
+
+/**
+ * 선택한 숫자를 선택했다고 마킹한 Player 데이터를 반환합니다.
+ * @param player
+ * @param selected
+ */
+export function makeNewPlayerMapper(selected: number): (player: PlayerData) => PlayerData {
+  return (player) => {
+    const newTable = markNewSelected(player.table, selected);
+    const newMatchedIndexList = [
+      ...player.matchedIndexList,
+      ...makeMatchedIndexList(newTable, selected),
+    ];
+
+    return {
+      ...player,
+      table: newTable,
+      matchedIndexList: newMatchedIndexList,
+      isWin: newMatchedIndexList.length >= 5,
+    };
+  };
 }
