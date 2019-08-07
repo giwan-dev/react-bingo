@@ -4,14 +4,17 @@ import styled from 'styled-components';
 import { State } from './reducers';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { setNewGame } from './actions';
+import { startGame, resetGame } from './actions';
+import { PlayerData } from './typing';
 
 interface AppPropsFromState {
-  turn: 1|2|null;
+  currentPlayerIndex: number|null;
+  players: PlayerData[];
 }
 
 interface AppPropsFromDispatch {
-  setNewGame: () => any;
+  onStart: () => any;
+  onReset: () => any;
 }
 
 type AppProps = AppPropsFromState & AppPropsFromDispatch;
@@ -30,28 +33,30 @@ const PlayerContainer = styled.main`
   justify-content: space-between;
 `;
 
-const App: React.FC<AppProps> = ({ turn, setNewGame }) => {
+const App: React.FC<AppProps> = ({ currentPlayerIndex, players, onStart, onReset }) => {
+  const isNew = currentPlayerIndex === null;
+  const playserNodeList = players.map((player, index) => (
+    <Player
+      key={player.name}
+      player={player}
+      isActive={index === currentPlayerIndex}
+    />
+  ));
+
   return (
     <AppContainer>
       <Header>
         <h1>React + Redux = Bingo</h1>
         <button
           type="button"
-          onClick={setNewGame}
+          onClick={isNew ? onStart : onReset}
         >
-          게임 시작
+          게임 {isNew ? '' : '재'}시작
         </button>
       </Header>
 
       <PlayerContainer>
-        <Player
-          name="Player 1"
-          isActive={turn === 1}
-        />
-        <Player
-          name="Player 2"
-          isActive={turn === 2}
-        />
+        {playserNodeList}
       </PlayerContainer>
     </AppContainer>
   );
@@ -59,13 +64,15 @@ const App: React.FC<AppProps> = ({ turn, setNewGame }) => {
 
 function mapStateToProps(state: State): AppPropsFromState {
   return {
-    turn: state.turn,
+    currentPlayerIndex: state.currentPlayerIndex,
+    players: state.players,
   };
 }
 
 function mapDispatchToProps(dispatch: Dispatch): AppPropsFromDispatch {
   return {
-    setNewGame: () => dispatch(setNewGame()),
+    onStart: () => dispatch(startGame()),
+    onReset: () => dispatch(resetGame()),
   };
 }
 

@@ -1,30 +1,28 @@
-export const SET_NEW_GAME = 'SET_NEW_GAME';
-export const UPDATE_TURN = 'UPDATE_TURN';
+export const START_GAME = 'START_GAME';
+export const RESET_GAME = 'RESET_GAME';
 export const ADD_NUMBER = 'ADD_NUMBER';
 
 export type Action = ReturnType<
-  typeof setNewGame |
-  typeof updateTurn |
+  typeof startGame |
+  typeof resetGame |
   typeof addNumber
 >;
 
 /**
  * 새 게임을 시작하는 액션을 반환합니다.
  */
-export function setNewGame() {
+export function startGame() {
   return {
-    type: SET_NEW_GAME,
+    type: START_GAME,
   } as const;
 }
 
 /**
- * 차례를 스토어에 업데이트합니다.
- * @param turn
+ * 다시 게임을 시작하는 액션을 반환합니다.ㄴ
  */
-export function updateTurn(turn: 1|2|null) {
+export function resetGame() {
   return {
-    turn,
-    type: UPDATE_TURN,
+    type: RESET_GAME,
   } as const;
 }
 

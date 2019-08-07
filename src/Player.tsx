@@ -1,11 +1,22 @@
 import * as React from 'react';
-import { map as _map } from 'lodash';
-import Board from './Board';
+import { chunk as _chunk, map as _map } from 'lodash';
 import styled from 'styled-components';
+import { PlayerData } from './typing';
+import { State } from './reducers';
+import { Dispatch } from 'redux';
+import { addNumber } from './actions';
+import { connect } from 'react-redux';
 
-interface IPlayerProps {
-  name: string;
+interface PlayerPropsFromState {
+}
+
+interface PlayerPropsFromDispatch {
+  onSelectNumber: (num: number) => any;
+}
+
+interface PlayerProps extends PlayerPropsFromState, PlayerPropsFromDispatch {
   isActive: boolean;
+  player: PlayerData;
 }
 
 const Container = styled.div<{disabled: boolean}>`
@@ -24,44 +35,126 @@ const PlayerName = styled.h2`
   margin-bottom: 10px;
 `;
 
+const Table = styled.table`
+  border-collapse: collapse;
+`;
+
+const Td = styled.td<{selected: boolean, disabled: boolean}>`
+  width: 50px;
+  height: 50px;
+  border: solid 1px #eeeeee;
+  padding: 12px;
+  text-align: center;
+
+  ${({ selected }) => selected && 'color: #fd0d5c' }
+  ${({ disabled }) => disabled ? 'cursor: not-allowed;' : 'cursor: pointer;'}
+`;
+
 const CompleteCollectionContainer = styled.div`
   margin-top: 30px;
 `;
 
-export default class Player extends React.Component<IPlayerProps> {
+class Player extends React.Component<PlayerProps> {
+  /**
+   * 번호를 눌렀을 때 처리 함수를 만드는 함수
+   * @param num
+   */
+  private makeTdClickHandler(num: number) {
+    return () => {
+      this.props.onSelectNumber(num);
+    };
+  }
+
+  /**
+   * 보드판 행, 열을 렌더링합니다.
+   */
+  private renderTableRows() {
+    const { isActive, player } = this.props;
+
+    return _map(
+      _chunk(player.table, 5),
+      (row, index) => {
+        // TODO: 코드 정리
+        const entityList = _map(row, (entity, index) => (
+          <Td
+            key={entity === null ? index : entity.key}
+            disabled={!isActive}
+            selected={entity !== null && entity.isSelected}
+            onClick={entity !== null && isActive ? this.makeTdClickHandler(entity.key) : undefined}
+          >
+            {entity !== null ? entity.key : ''}
+          </Td>
+        ));
+
+        return (
+          <tr key={row.join('-') + index}>
+            {entityList}
+          </tr>
+        );
+      },
+    );
+  }
+
   /**
    * 빙고 맞춘 조합 목록을 렌더링합니다.
    */
-  private renderCompleteCollectionList() {
+  private renderMatchedCombinationList() {
+    const { table, matchedIndexList } = this.props.player;
+
     return _map(
-      [
-        // FIXME: 더미 데이터 수정
-        [1, 2, 3, 4, 5],
-        [3, 19, 14, 6, 12],
-      ],
-      collection => (
-        <div key={collection.join('-')}>
-          {collection.join(', ')}
+      _map(
+        matchedIndexList,
+        combination => _map(combination, (index) => {
+          const entity = table[index];
+          return entity !== null ? entity.key : null;
+        }),
+      ),
+      (combination, index) => (
+        <div key={combination.join('-') + index}>
+          {combination.join(', ')}
         </div>
       ),
     );
   }
 
   public render() {
-    const { name, isActive } = this.props;
+    const { player, isActive } = this.props;
+
     return (
       <Container disabled={!isActive}>
-        <PlayerName>{name}</PlayerName>
-        <Board
-          selectable={isActive}
-        />
+        <PlayerName>
+          {player.name}
+        </PlayerName>
+
+        <Table>
+          <tbody>
+            {this.renderTableRows()}
+          </tbody>
+        </Table>
+
         <CompleteCollectionContainer>
           <div>빙고 조합</div>
           <div>
-            {this.renderCompleteCollectionList()}
+            {this.renderMatchedCombinationList()}
           </div>
         </CompleteCollectionContainer>
       </Container>
     );
   }
 }
+
+function mapStateToProps(state: State): PlayerPropsFromState {
+  return {
+
+  };
+}
+
+function mapDispatchToProps(dispatch: Dispatch): PlayerPropsFromDispatch {
+  return {
+    onSelectNumber: num => dispatch(addNumber(num)),
+  };
+}
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+
+export default withConnect(Player);
