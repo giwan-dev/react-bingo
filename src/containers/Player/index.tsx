@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { chunk as _chunk, map as _map, sample as _sample } from 'lodash';
 import styled from 'styled-components';
-import { PlayerData, BingoEntityData } from '../../typing';
-import { State } from '../../reducers';
+import { PlayerData, BingoEntityData } from 'typing';
+import { State } from 'reducers';
 import { Dispatch } from 'redux';
-import { addNumber } from '../../actions';
+import { addNumber } from 'actions';
 import { connect } from 'react-redux';
 import bind from 'bind-decorator';
-import Alert from '../../components/Alert';
+import Alert from 'components/Alert';
 
 interface PlayerPropsFromState {
 
