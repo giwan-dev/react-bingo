@@ -1,8 +1,23 @@
 import * as React from 'react';
-import { chunk as _chunk, range as _range, map as _map } from 'lodash';
+import { chunk as _chunk, range as _range, map as _map, shuffle as _shuffle } from 'lodash';
 import styled from 'styled-components';
+import { State } from './reducers';
+import { Dispatch } from 'redux';
+import { addNumber } from './actions';
+import { connect } from 'react-redux';
 
-interface IBoardProps {
+interface BoardPropsFromState {
+  selectedNumberList: number[];
+}
+
+interface BoardPropsFromDispatch {
+  addNumber: (num: number) => any;
+}
+
+type BoardProps = BoardPropsFromState & BoardPropsFromDispatch;
+
+interface BoardState {
+  bingoTable: number[];
 }
 
 const Table = styled.table`
@@ -15,18 +30,35 @@ const Td = styled.td`
   text-align: center;
 `;
 
-export default class Board extends React.Component<IBoardProps> {
+class Board extends React.Component<BoardProps, BoardState> {
+  constructor(props: BoardProps) {
+    super(props);
+
+    this.state = {
+      bingoTable: _map(_shuffle(_range(25)), num => num + 1),
+    };
+  }
+
+  private makeTdClickHandler(num: number) {
+    return () => {
+      this.props.addNumber(num);
+    };
+  }
+
   /**
    * 보드판 행, 열을 렌더링합니다.
    */
   private renderTableRows() {
     // TODO: 각 부분 컴포넌트로 분리하기
     return _map(
-      _chunk(_range(25), 5),
+      _chunk(this.state.bingoTable, 5),
       (row) => {
         const entityList = _map(row, num => (
-          <Td key={num}>
-            {num + 1}
+          <Td
+            key={num}
+            onClick={this.makeTdClickHandler(num)}
+          >
+            {num}
           </Td>
         ));
 
@@ -49,3 +81,19 @@ export default class Board extends React.Component<IBoardProps> {
     );
   }
 }
+
+function mapStateToProps(state: State): BoardPropsFromState {
+  return {
+    selectedNumberList: state.selectedNumberList,
+  };
+}
+
+function mapDispatchToProps(dispatch: Dispatch): BoardPropsFromDispatch {
+  return {
+    addNumber: num => dispatch(addNumber(num)),
+  };
+}
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+
+export default withConnect(Board);
