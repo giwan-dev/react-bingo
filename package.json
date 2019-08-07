@@ -26,6 +26,9 @@
     "lint:ts": "tslint -p tsconfig.json -c tslint.json 'src/**/*.+(ts|tsx)'",
     "lint:ts:fix": "tslint -p tsconfig.json -c tslint.json --fix 'src/**/*.+(ts|tsx)'"
   },
+  "pre-commit": [
+    "lint:ts:fix"
+  ],
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -42,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "pre-commit": "^1.2.2",
     "tslint": "^5.18.0"
   }
 }
