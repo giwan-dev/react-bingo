@@ -1,12 +1,12 @@
 import React from 'react';
-import Player from './Player';
+import Player from '../Player';
 import styled from 'styled-components';
-import { State } from './reducers';
+import { State } from '../../reducers';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { startGame, resetGame } from './actions';
-import { PlayerData } from './typing';
-import Alert from './Alert';
+import { startGame, resetGame } from '../../actions';
+import { PlayerData } from '../../typing';
+import Alert from '../../components/Alert';
 
 interface AppPropsFromState {
   currentPlayerIndex: number|null;
