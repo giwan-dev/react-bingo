@@ -24,10 +24,13 @@ const Table = styled.table`
   border-collapse: collapse;
 `;
 
-const Td = styled.td`
+const Td = styled.td<{active: boolean}>`
   border: solid 1px #eeeeee;
   padding: 12px;
   text-align: center;
+  cursor: pointer;
+
+  ${({ active }) => active && 'color: #fd0d5c' }
 `;
 
 class Board extends React.Component<BoardProps, BoardState> {
@@ -49,13 +52,14 @@ class Board extends React.Component<BoardProps, BoardState> {
    * 보드판 행, 열을 렌더링합니다.
    */
   private renderTableRows() {
-    // TODO: 각 부분 컴포넌트로 분리하기
+    const { selectedNumberList } = this.props;
     return _map(
       _chunk(this.state.bingoTable, 5),
       (row) => {
         const entityList = _map(row, num => (
           <Td
             key={num}
+            active={selectedNumberList.includes(num)}
             onClick={this.makeTdClickHandler(num)}
           >
             {num}
