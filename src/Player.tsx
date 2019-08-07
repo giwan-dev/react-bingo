@@ -5,7 +5,20 @@ import styled from 'styled-components';
 
 interface IPlayerProps {
   name: string;
+  isActive: boolean;
 }
+
+const Container = styled.div<{disabled: boolean}>`
+  ${({ disabled }) => disabled && `
+    * {
+      opacity: 0.7;
+    }
+
+    td {
+      cursor: not-allowed;
+    }
+  `}
+`;
 
 const PlayerName = styled.h2`
   margin-bottom: 10px;
@@ -35,18 +48,20 @@ export default class Player extends React.Component<IPlayerProps> {
   }
 
   public render() {
-    const { name } = this.props;
+    const { name, isActive } = this.props;
     return (
-      <div>
+      <Container disabled={!isActive}>
         <PlayerName>{name}</PlayerName>
-        <Board />
+        <Board
+          selectable={isActive}
+        />
         <CompleteCollectionContainer>
           <div>빙고 조합</div>
           <div>
             {this.renderCompleteCollectionList()}
           </div>
         </CompleteCollectionContainer>
-      </div>
+      </Container>
     );
   }
 }

@@ -14,7 +14,9 @@ interface BoardPropsFromDispatch {
   addNumber: (num: number) => any;
 }
 
-type BoardProps = BoardPropsFromState & BoardPropsFromDispatch;
+interface BoardProps extends BoardPropsFromState, BoardPropsFromDispatch {
+  selectable: boolean;
+}
 
 interface BoardState {
   bingoTable: number[];
@@ -24,13 +26,13 @@ const Table = styled.table`
   border-collapse: collapse;
 `;
 
-const Td = styled.td<{active: boolean}>`
+const Td = styled.td<{selected: boolean, disabled: boolean}>`
   border: solid 1px #eeeeee;
   padding: 12px;
   text-align: center;
-  cursor: pointer;
 
-  ${({ active }) => active && 'color: #fd0d5c' }
+  ${({ selected }) => selected && 'color: #fd0d5c' }
+  ${({ disabled }) => disabled ? 'cursor: not-allowed;' : 'cursor: pointer;'}
 `;
 
 class Board extends React.Component<BoardProps, BoardState> {
@@ -42,6 +44,10 @@ class Board extends React.Component<BoardProps, BoardState> {
     };
   }
 
+  /**
+   * 번호를 눌렀을 때 처리 함수를 만드는 함수
+   * @param num
+   */
   private makeTdClickHandler(num: number) {
     return () => {
       this.props.addNumber(num);
@@ -52,15 +58,17 @@ class Board extends React.Component<BoardProps, BoardState> {
    * 보드판 행, 열을 렌더링합니다.
    */
   private renderTableRows() {
-    const { selectedNumberList } = this.props;
+    const { selectedNumberList, selectable } = this.props;
+
     return _map(
       _chunk(this.state.bingoTable, 5),
       (row) => {
         const entityList = _map(row, num => (
           <Td
             key={num}
-            active={selectedNumberList.includes(num)}
-            onClick={this.makeTdClickHandler(num)}
+            disabled={!selectable}
+            selected={selectedNumberList.includes(num)}
+            onClick={selectable ? this.makeTdClickHandler(num) : undefined}
           >
             {num}
           </Td>
