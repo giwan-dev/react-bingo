@@ -43,11 +43,13 @@ export function makeNewPlayers(): PlayerData[] {
       name: 'Player 1',
       table: makeNewBingo(),
       matchedIndexList: [],
+      isWin: false,
     },
     {
       name: 'Player 2',
       table: makeNewBingo(),
       matchedIndexList: [],
+      isWin: false,
     },
   ];
 }

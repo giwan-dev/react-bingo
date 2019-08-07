@@ -18,11 +18,13 @@ const initialState: State = {
       name: 'Player 1',
       table: _fill(Array(25), null),
       matchedIndexList: [],
+      isWin: false,
     },
     {
       name: 'Player 2',
       table: _fill(Array(25), null),
       matchedIndexList: [],
+      isWin: false,
     },
   ],
 };
@@ -49,23 +51,30 @@ export default function rootReducer(state: State = initialState, action: Action)
         };
       }
 
+      const nextPlayerIndex = state.currentPlayerIndex + 1 === state.players.length
+        ? 0
+        : state.currentPlayerIndex + 1;
+      const newPlayers = _map(state.players, (player) => {
+        const newTable = markNewSelected(player.table, action.num);
+        const newMatchedIndexList = [
+          ...player.matchedIndexList,
+          ...makeMatchedIndexList(newTable, action.num),
+        ];
+
+        return {
+          ...player,
+          table: newTable,
+          matchedIndexList: newMatchedIndexList,
+          isWin: newMatchedIndexList.length >= 5,
+        };
+      });
+
       return {
         ...state,
-        currentPlayerIndex: state.currentPlayerIndex + 1 === state.players.length
-          ? 0
-          : state.currentPlayerIndex + 1,
-        players: _map(state.players, (player) => {
-          const newTable = markNewSelected(player.table, action.num);
-
-          return {
-            ...player,
-            table: newTable,
-            matchedIndexList: [
-              ...player.matchedIndexList,
-              ...makeMatchedIndexList(newTable, action.num),
-            ],
-          };
-        }),
+        currentPlayerIndex: newPlayers.filter(player => player.isWin).length > 0
+          ? null
+          : nextPlayerIndex,
+        players: newPlayers,
       };
     default:
       return state;

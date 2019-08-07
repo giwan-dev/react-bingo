@@ -7,6 +7,7 @@ export interface PlayerData {
   name: string;
   table: BingoTable;
   matchedIndexList: number[][];
+  isWin: boolean;
 }
 
 /**
