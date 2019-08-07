@@ -23,12 +23,17 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "lint:staged": "lint-staged",
     "lint:ts": "tslint -p tsconfig.json -c tslint.json 'src/**/*.+(ts|tsx)'",
     "lint:ts:fix": "tslint -p tsconfig.json -c tslint.json --fix 'src/**/*.+(ts|tsx)'"
   },
-  "pre-commit": [
-    "lint:ts:fix"
-  ],
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "yarn lint:ts:fix",
+      "git add --force"
+    ]
+  },
+  "pre-commit": "lint:staged",
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -45,6 +50,7 @@
     ]
   },
   "devDependencies": {
+    "lint-staged": "^9.2.1",
     "pre-commit": "^1.2.2",
     "tslint": "^5.18.0"
   }
