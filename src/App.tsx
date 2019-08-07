@@ -1,25 +1,36 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Player from './Player';
+import styled from 'styled-components';
+
+const AppContainer = styled.div`
+  margin: 0 auto;
+  max-width: 800px;
+`;
+
+const Header = styled.header`
+  margin-bottom: 30px;
+`;
+
+const PlayerContainer = styled.main`
+  display: flex;
+  justify-content: space-between;
+`;
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppContainer>
+      <Header>
+        <h1>React + Redux = Bingo</h1>
+        <button type="button">
+          게임 시작
+        </button>
+      </Header>
+
+      <PlayerContainer>
+        <Player name="Player 1" />
+        <Player name="Player 2" />
+      </PlayerContainer>
+    </AppContainer>
   );
 };
 
