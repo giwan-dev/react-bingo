@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { chunk as _chunk, map as _map } from 'lodash';
 import styled from 'styled-components';
-import { PlayerData } from './typing';
+import { PlayerData, BingoEntityData } from './typing';
 import { State } from './reducers';
 import { Dispatch } from 'redux';
 import { addNumber } from './actions';
@@ -75,16 +75,24 @@ class Player extends React.Component<PlayerProps> {
       _chunk(player.table, 5),
       (row, index) => {
         // TODO: 코드 정리
-        const entityList = _map(row, (entity, index) => (
-          <Td
-            key={entity === null ? index : entity.key}
-            disabled={!isActive}
-            selected={entity !== null && entity.isSelected}
-            onClick={entity !== null && isActive ? this.makeTdClickHandler(entity.key) : undefined}
-          >
-            {entity !== null ? entity.key : ''}
-          </Td>
-        ));
+        const entityList = _map(row, (entity, index) => {
+          const selectable = entity !== null && isActive && !entity.isSelected;
+          const onClickHandler = selectable
+            // HACK: selectable에 null 아닌거 들어가므로 보장됨
+            ? this.makeTdClickHandler((entity as BingoEntityData).key)
+            : undefined;
+
+          return (
+            <Td
+              key={entity === null ? index : entity.key}
+              disabled={!selectable}
+              selected={entity !== null && entity.isSelected}
+              onClick={onClickHandler}
+            >
+              {entity !== null ? entity.key : ''}
+            </Td>
+          );
+        });
 
         return (
           <tr key={row.join('-') + index}>
