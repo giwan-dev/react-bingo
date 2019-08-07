@@ -1,8 +1,19 @@
 import * as React from 'react';
 import { chunk as _chunk, range as _range, map as _map } from 'lodash';
+import styled from 'styled-components';
 
 interface IBoardProps {
 }
+
+const Table = styled.table`
+  border-collapse: collapse;
+`;
+
+const Td = styled.td`
+  border: solid 1px #eeeeee;
+  padding: 12px;
+  text-align: center;
+`;
 
 export default class Board extends React.Component<IBoardProps> {
   /**
@@ -14,9 +25,9 @@ export default class Board extends React.Component<IBoardProps> {
       _chunk(_range(25), 5),
       (row) => {
         const entityList = _map(row, num => (
-          <td key={num}>
+          <Td key={num}>
             {num + 1}
-          </td>
+          </Td>
         ));
 
         return (
@@ -30,11 +41,11 @@ export default class Board extends React.Component<IBoardProps> {
 
   public render() {
     return (
-      <table>
+      <Table>
         <tbody>
           {this.renderTableRows()}
         </tbody>
-      </table>
+      </Table>
     );
   }
 }
