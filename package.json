@@ -10,6 +10,7 @@
     "@types/react-dom": "16.8.5",
     "@types/react-redux": "^7.1.1",
     "@types/styled-components": "^4.1.18",
+    "bind-decorator": "^1.0.11",
     "lodash": "^4.17.15",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

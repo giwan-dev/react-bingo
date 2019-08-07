@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { startGame, resetGame } from './actions';
 import { PlayerData } from './typing';
-import AlertWinner from './AlertWinner';
+import Alert from './Alert';
 
 interface AppPropsFromState {
   currentPlayerIndex: number|null;
@@ -69,7 +69,7 @@ const App: React.FC<AppProps> = ({ currentPlayerIndex, players, onStart, onReset
         {playerNodeList}
       </PlayerContainer>
 
-      <AlertWinner
+      <Alert
         isVisible={winners.length > 0}
         message={makeAlertMessage(winners)}
         onConfirm={onReset}

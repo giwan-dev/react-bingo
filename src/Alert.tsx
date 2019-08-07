@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 
-interface AlertWinnerProps {
+interface AlertProps {
   isVisible: boolean;
   message: string;
   onConfirm: React.MouseEventHandler<HTMLElement>;
@@ -36,10 +36,10 @@ const AlertContainer = styled.div`
 const alertPortal = document.getElementById('alert-portal');
 const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
-export default class AlertWinner extends React.Component<AlertWinnerProps> {
+export default class Alert extends React.Component<AlertProps> {
   el: HTMLElement|null = null;
 
-  constructor(props: AlertWinnerProps) {
+  constructor(props: AlertProps) {
     super(props);
 
     this.el = document.createElement('div');

@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { chunk as _chunk, map as _map } from 'lodash';
+import { chunk as _chunk, map as _map, sample as _sample } from 'lodash';
 import styled from 'styled-components';
 import { PlayerData, BingoEntityData } from './typing';
 import { State } from './reducers';
 import { Dispatch } from 'redux';
 import { addNumber } from './actions';
 import { connect } from 'react-redux';
+import bind from 'bind-decorator';
+import Alert from './Alert';
 
 interface PlayerPropsFromState {
 }
@@ -17,6 +19,10 @@ interface PlayerPropsFromDispatch {
 interface PlayerProps extends PlayerPropsFromState, PlayerPropsFromDispatch {
   isActive: boolean;
   player: PlayerData;
+}
+
+interface PlayerState {
+  isAlertVisible: boolean;
 }
 
 const Container = styled.div<{disabled: boolean}>`
@@ -31,8 +37,16 @@ const Container = styled.div<{disabled: boolean}>`
   `}
 `;
 
-const PlayerName = styled.h2`
+const PlayerName = styled.h2<{highlight: boolean}>`
   margin-bottom: 10px;
+
+  ${({ highlight }) => highlight && 'color: #fd0d5c;'}
+`;
+
+const TableContainer = styled.div<{highlight: boolean}>`
+  border-radius: 5px;
+  overflow: hidden;
+  ${({ highlight }) => highlight && 'border: solid 1px #ffd0df;'}
 `;
 
 const Table = styled.table`
@@ -45,16 +59,28 @@ const Td = styled.td<{selected: boolean, disabled: boolean}>`
   border: solid 1px #eeeeee;
   padding: 12px;
   text-align: center;
+  transition: background-color ease-out 0.2s;
 
   ${({ selected }) => selected && 'color: #fd0d5c' }
-  ${({ disabled }) => disabled ? 'cursor: not-allowed;' : 'cursor: pointer;'}
+  ${({ disabled }) => disabled ? 'cursor: not-allowed;' : `
+    cursor: pointer;
+
+    &:hover {
+      border: 0;
+      background-color: #ffe3ec;
+    }
+  `}
 `;
 
 const CompleteCollectionContainer = styled.div`
   margin-top: 30px;
 `;
 
-class Player extends React.Component<PlayerProps> {
+class Player extends React.Component<PlayerProps, PlayerState> {
+  state: PlayerState = {
+    isAlertVisible: false,
+  };
+
   /**
    * 번호를 눌렀을 때 처리 함수를 만드는 함수
    * @param num
@@ -63,6 +89,29 @@ class Player extends React.Component<PlayerProps> {
     return () => {
       this.props.onSelectNumber(num);
     };
+  }
+
+  /**
+   * 잘못된 때에 번호를 눌렀을 때 처리 함수
+   */
+  @bind
+  private handleTdErrorClick() {
+    const { isActive, player } = this.props;
+    if (_sample(player.table) !== null && !isActive) {
+      this.setState({
+        isAlertVisible: true,
+      });
+    }
+  }
+
+  /**
+   * 알림을 확인했을 때 처리 함수
+   */
+  @bind
+  private handleAlertConfirm() {
+    this.setState({
+      isAlertVisible: false,
+    });
   }
 
   /**
@@ -80,7 +129,7 @@ class Player extends React.Component<PlayerProps> {
           const onClickHandler = selectable
             // HACK: selectable에 null 아닌거 들어가므로 보장됨
             ? this.makeTdClickHandler((entity as BingoEntityData).key)
-            : undefined;
+            : this.handleTdErrorClick;
 
           return (
             <Td
@@ -127,18 +176,21 @@ class Player extends React.Component<PlayerProps> {
 
   public render() {
     const { player, isActive } = this.props;
+    const { isAlertVisible } = this.state;
 
     return (
       <Container disabled={!isActive}>
-        <PlayerName>
+        <PlayerName highlight={isActive}>
           {player.name}
         </PlayerName>
 
-        <Table>
-          <tbody>
-            {this.renderTableRows()}
-          </tbody>
-        </Table>
+        <TableContainer highlight={isActive}>
+          <Table>
+            <tbody>
+              {this.renderTableRows()}
+            </tbody>
+          </Table>
+        </TableContainer>
 
         <CompleteCollectionContainer>
           <div>빙고 조합</div>
@@ -146,6 +198,12 @@ class Player extends React.Component<PlayerProps> {
             {this.renderMatchedCombinationList()}
           </div>
         </CompleteCollectionContainer>
+
+        <Alert
+          isVisible={isAlertVisible}
+          message="잘못된 차례입니다."
+          onConfirm={this.handleAlertConfirm}
+        />
       </Container>
     );
   }
