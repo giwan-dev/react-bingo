@@ -3,8 +3,9 @@ import { PlayerData } from './typing';
 import {
   fill as _fill,
   map as _map,
+  some as _some,
 } from 'lodash';
-import { makeNewPlayers, markNewSelected, makeMatchedIndexList } from './helpers';
+import { initializePlayers, makeNewPlayerMapper } from './helpers';
 
 export interface State {
   currentPlayerIndex: number|null;
@@ -35,14 +36,16 @@ export default function rootReducer(state: State = initialState, action: Action)
       return {
         ...state,
         currentPlayerIndex: 0,
-        players: makeNewPlayers(),
+        players: initializePlayers(),
       };
+
     case RESET_GAME:
       return {
         ...initialState,
         currentPlayerIndex: 0,
-        players: makeNewPlayers(),
+        players: initializePlayers(),
       };
+
     case ADD_NUMBER:
       if (state.currentPlayerIndex === null) {
         return {
@@ -54,24 +57,11 @@ export default function rootReducer(state: State = initialState, action: Action)
       const nextPlayerIndex = state.currentPlayerIndex + 1 === state.players.length
         ? 0
         : state.currentPlayerIndex + 1;
-      const newPlayers = _map(state.players, (player) => {
-        const newTable = markNewSelected(player.table, action.num);
-        const newMatchedIndexList = [
-          ...player.matchedIndexList,
-          ...makeMatchedIndexList(newTable, action.num),
-        ];
-
-        return {
-          ...player,
-          table: newTable,
-          matchedIndexList: newMatchedIndexList,
-          isWin: newMatchedIndexList.length >= 5,
-        };
-      });
+      const newPlayers = _map(state.players, makeNewPlayerMapper(action.num));
 
       return {
         ...state,
-        currentPlayerIndex: newPlayers.filter(player => player.isWin).length > 0
+        currentPlayerIndex: _some(newPlayers, player => player.isWin)
           ? null
           : nextPlayerIndex,
         players: newPlayers,
