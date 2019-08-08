@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { chunk as _chunk, map as _map, sample as _sample } from 'lodash';
 import styled from 'styled-components';
 import { PlayerData, BingoEntityData } from 'typing';
@@ -8,6 +8,7 @@ import { addNumber } from 'actions';
 import { connect } from 'react-redux';
 import bind from 'bind-decorator';
 import Alert from 'components/Alert';
+import COLOR from 'colors';
 
 interface PlayerPropsFromState {
 
@@ -41,7 +42,7 @@ const Container = styled.div<{disabled: boolean}>`
 const PlayerName = styled.h2<{highlight: boolean}>`
   margin-bottom: 10px;
 
-  ${({ highlight }) => highlight && 'color: #fd0d5c;'}
+  ${({ highlight }) => highlight && `color: ${COLOR.primary};`}
 `;
 
 const TableContainer = styled.div<{highlight: boolean}>`
@@ -62,7 +63,7 @@ const Td = styled.td<{selected: boolean, disabled: boolean}>`
   text-align: center;
   transition: background-color ease-out 0.2s;
 
-  ${({ selected }) => selected && 'color: #fd0d5c' }
+  ${({ selected }) => selected && `color: ${COLOR.primary}` }
   ${({ disabled }) => disabled ? 'cursor: not-allowed;' : `
     cursor: pointer;
 
