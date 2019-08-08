@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 interface AlertWinnerPropsFromState {
   isVisible: boolean;
-  winnerName: string|null; // null이면 무승부
+  winnerName: string|null; // null이면 승자가 없음
 }
 
 interface AlertWinnerPropsFromDispatch {
@@ -29,8 +29,15 @@ const AlertWinner: React.FunctionComponent<AlertWinnerProps> = ({ isVisible, win
 function mapStateToProps(state: State): AlertWinnerPropsFromState {
   const winners = state.players.filter(player => player.isWin);
 
+  if (winners.length === 0) {
+    return {
+      isVisible: false,
+      winnerName: null,
+    };
+  }
+
   return {
-    isVisible: winners.length > 0,
+    isVisible: true,
     winnerName: winners.length > 1 ? null : winners[0].name,
   };
 }
