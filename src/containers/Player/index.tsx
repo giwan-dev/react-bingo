@@ -48,7 +48,7 @@ const PlayerName = styled.h2<{highlight: boolean}>`
 const TableContainer = styled.div<{highlight: boolean}>`
   border-radius: 5px;
   overflow: hidden;
-  ${({ highlight }) => highlight && 'border: solid 1px #ffd0df;'}
+  ${({ highlight }) => highlight && `border: solid 1px ${COLOR.primaryLight};`}
 `;
 
 const Table = styled.table`
@@ -69,7 +69,7 @@ const Td = styled.td<{selected: boolean, disabled: boolean}>`
 
     &:hover {
       border: 0;
-      background-color: #ffe3ec;
+      background-color: ${COLOR.primaryLighter};
     }
   `}
 `;
