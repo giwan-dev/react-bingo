@@ -9,6 +9,7 @@ import { PlayerData } from 'typing';
 import Alert from 'components/Alert';
 
 interface AppPropsFromState {
+  isGameStarted: boolean;
   currentPlayerIndex: number|null;
   players: PlayerData[];
 }
@@ -42,8 +43,7 @@ function makeAlertMessage(winners: PlayerData[]): string {
   return winners.length > 1 ? '무승부입니다.' : `${winners[0].name} 승리입니다.`;
 }
 
-const App: React.FC<AppProps> = ({ currentPlayerIndex, players, onStart, onReset }) => {
-  const isNew = currentPlayerIndex === null;
+const App: React.FC<AppProps> = ({ isGameStarted, currentPlayerIndex, players, onStart, onReset }) => {
   const playerNodeList = players.map((player, index) => (
     <Player
       key={player.name}
@@ -59,9 +59,9 @@ const App: React.FC<AppProps> = ({ currentPlayerIndex, players, onStart, onReset
         <h1>React + Redux = Bingo</h1>
         <button
           type="button"
-          onClick={isNew ? onStart : onReset}
+          onClick={onStart}
         >
-          게임 {isNew ? '' : '재'}시작
+          게임 {isGameStarted ? '재' : ''}시작
         </button>
       </Header>
 
@@ -80,6 +80,7 @@ const App: React.FC<AppProps> = ({ currentPlayerIndex, players, onStart, onReset
 
 function mapStateToProps(state: State): AppPropsFromState {
   return {
+    isGameStarted: state.isGameStarted,
     currentPlayerIndex: state.currentPlayerIndex,
     players: state.players,
   };

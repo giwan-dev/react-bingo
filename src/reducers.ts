@@ -8,11 +8,13 @@ import {
 import { initializePlayers, makeNewPlayerMapper } from './helpers';
 
 export interface State {
+  isGameStarted: boolean;
   currentPlayerIndex: number|null;
   players: PlayerData[];
 }
 
 const initialState: State = {
+  isGameStarted: false,
   currentPlayerIndex: null,
   players: [
     {
@@ -34,14 +36,7 @@ export default function rootReducer(state: State = initialState, action: Action)
   switch (action.type) {
     case START_GAME:
       return {
-        ...state,
-        currentPlayerIndex: 0,
-        players: initializePlayers(),
-      };
-
-    case RESET_GAME:
-      return {
-        ...initialState,
+        isGameStarted: true,
         currentPlayerIndex: 0,
         players: initializePlayers(),
       };
@@ -66,6 +61,8 @@ export default function rootReducer(state: State = initialState, action: Action)
           : nextPlayerIndex,
         players: newPlayers,
       };
+    case RESET_GAME:
+      return initialState;
     default:
       return state;
   }
