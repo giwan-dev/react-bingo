@@ -4,19 +4,16 @@ import styled from 'styled-components';
 import { State } from 'reducers';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { startGame, resetGame } from 'actions';
 import { PlayerData } from 'typing';
-import Alert from 'components/Alert';
+import AlertWinner from 'containers/AlertWinner';
+import ButtonStart from 'containers/ButtonStart';
 
 interface AppPropsFromState {
-  isGameStarted: boolean;
   currentPlayerIndex: number|null;
   players: PlayerData[];
 }
 
 interface AppPropsFromDispatch {
-  onStart: () => any;
-  onReset: () => any;
 }
 
 type AppProps = AppPropsFromState & AppPropsFromDispatch;
@@ -35,15 +32,7 @@ const PlayerContainer = styled.main`
   justify-content: space-between;
 `;
 
-function makeAlertMessage(winners: PlayerData[]): string {
-  if (winners.length === 0) {
-    return '';
-  }
-
-  return winners.length > 1 ? '무승부입니다.' : `${winners[0].name} 승리입니다.`;
-}
-
-const App: React.FC<AppProps> = ({ isGameStarted, currentPlayerIndex, players, onStart, onReset }) => {
+const App: React.FC<AppProps> = ({ currentPlayerIndex, players }) => {
   const playerNodeList = players.map((player, index) => (
     <Player
       key={player.name}
@@ -51,36 +40,25 @@ const App: React.FC<AppProps> = ({ isGameStarted, currentPlayerIndex, players, o
       isActive={index === currentPlayerIndex}
     />
   ));
-  const winners = players.filter(player => player.isWin);
 
   return (
     <AppContainer>
       <Header>
         <h1>React + Redux = Bingo</h1>
-        <button
-          type="button"
-          onClick={onStart}
-        >
-          게임 {isGameStarted ? '재' : ''}시작
-        </button>
+        <ButtonStart />
       </Header>
 
       <PlayerContainer>
         {playerNodeList}
       </PlayerContainer>
 
-      <Alert
-        isVisible={winners.length > 0}
-        message={makeAlertMessage(winners)}
-        onConfirm={onReset}
-      />
+      <AlertWinner />
     </AppContainer>
   );
 };
 
 function mapStateToProps(state: State): AppPropsFromState {
   return {
-    isGameStarted: state.isGameStarted,
     currentPlayerIndex: state.currentPlayerIndex,
     players: state.players,
   };
@@ -88,8 +66,6 @@ function mapStateToProps(state: State): AppPropsFromState {
 
 function mapDispatchToProps(dispatch: Dispatch): AppPropsFromDispatch {
   return {
-    onStart: () => dispatch(startGame()),
-    onReset: () => dispatch(resetGame()),
   };
 }
 
