@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
+import Button from './Button';
 
 interface AlertProps {
   isVisible: boolean;
@@ -69,12 +70,12 @@ export default class Alert extends React.Component<AlertProps> {
       <Overlay onClick={onConfirm}>
         <AlertContainer onClick={stopPropagation}>
           {message}
-          <button
+          <Button
             type="button"
             onClick={onConfirm}
           >
             확인
-          </button>
+          </Button>
         </AlertContainer>
       </Overlay>
     );

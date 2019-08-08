@@ -3,6 +3,7 @@ import { State } from 'reducers';
 import { Dispatch } from 'redux';
 import { startGame } from 'actions';
 import { connect } from 'react-redux';
+import Button from 'components/Button';
 
 interface ButtonStartPropsFromState {
   isGameStarted: boolean;
@@ -16,12 +17,12 @@ type ButtonStartProps = ButtonStartPropsFromState & ButtonStartPropsFromDispatch
 
 const ButtonStart: React.FunctionComponent<ButtonStartProps> = ({ isGameStarted, onClick }) => {
   return (
-    <button
+    <Button
       type="button"
       onClick={onClick}
     >
       게임 {isGameStarted ? '재' : ''}시작
-    </button>
+    </Button>
   );
 };
 
