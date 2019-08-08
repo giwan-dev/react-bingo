@@ -1,4 +1,4 @@
-import { Action, ADD_NUMBER, START_GAME, RESTART_GAME, RESET_GAME } from './actions';
+import { Action, ADD_NUMBER, START_GAME, RESET_GAME } from './actions';
 import { PlayerData } from './typing';
 import {
   fill as _fill,
@@ -8,13 +8,13 @@ import {
 import { initializePlayers, makeNewPlayerMapper } from './helpers';
 
 export interface State {
-  gameStarted: boolean;
+  isGameStarted: boolean;
   currentPlayerIndex: number|null;
   players: PlayerData[];
 }
 
 const initialState: State = {
-  gameStarted: false,
+  isGameStarted: false,
   currentPlayerIndex: null,
   players: [
     {
@@ -36,15 +36,7 @@ export default function rootReducer(state: State = initialState, action: Action)
   switch (action.type) {
     case START_GAME:
       return {
-        ...state,
-        gameStarted: true,
-        currentPlayerIndex: 0,
-        players: initializePlayers(),
-      };
-
-    case RESTART_GAME:
-      return {
-        ...initialState,
+        isGameStarted: true,
         currentPlayerIndex: 0,
         players: initializePlayers(),
       };

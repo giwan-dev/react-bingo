@@ -4,18 +4,18 @@ import styled from 'styled-components';
 import { State } from 'reducers';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { startGame, restartGame, resetGame } from 'actions';
+import { startGame, resetGame } from 'actions';
 import { PlayerData } from 'typing';
 import Alert from 'components/Alert';
 
 interface AppPropsFromState {
+  isGameStarted: boolean;
   currentPlayerIndex: number|null;
   players: PlayerData[];
 }
 
 interface AppPropsFromDispatch {
   onStart: () => any;
-  onRestart: () => any;
   onReset: () => any;
 }
 
@@ -43,8 +43,7 @@ function makeAlertMessage(winners: PlayerData[]): string {
   return winners.length > 1 ? '무승부입니다.' : `${winners[0].name} 승리입니다.`;
 }
 
-const App: React.FC<AppProps> = ({ currentPlayerIndex, players, onStart, onRestart, onReset }) => {
-  const isNew = currentPlayerIndex === null;
+const App: React.FC<AppProps> = ({ isGameStarted, currentPlayerIndex, players, onStart, onReset }) => {
   const playerNodeList = players.map((player, index) => (
     <Player
       key={player.name}
@@ -60,9 +59,9 @@ const App: React.FC<AppProps> = ({ currentPlayerIndex, players, onStart, onResta
         <h1>React + Redux = Bingo</h1>
         <button
           type="button"
-          onClick={isNew ? onStart : onRestart}
+          onClick={onStart}
         >
-          게임 {isNew ? '' : '재'}시작
+          게임 {isGameStarted ? '재' : ''}시작
         </button>
       </Header>
 
@@ -81,6 +80,7 @@ const App: React.FC<AppProps> = ({ currentPlayerIndex, players, onStart, onResta
 
 function mapStateToProps(state: State): AppPropsFromState {
   return {
+    isGameStarted: state.isGameStarted,
     currentPlayerIndex: state.currentPlayerIndex,
     players: state.players,
   };
@@ -89,7 +89,6 @@ function mapStateToProps(state: State): AppPropsFromState {
 function mapDispatchToProps(dispatch: Dispatch): AppPropsFromDispatch {
   return {
     onStart: () => dispatch(startGame()),
-    onRestart: () => dispatch(restartGame()),
     onReset: () => dispatch(resetGame()),
   };
 }
