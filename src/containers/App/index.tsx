@@ -4,18 +4,16 @@ import styled from 'styled-components';
 import { State } from 'reducers';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { startGame } from 'actions';
 import { PlayerData } from 'typing';
 import AlertWinner from 'containers/AlertWinner';
+import ButtonStart from 'containers/ButtonStart';
 
 interface AppPropsFromState {
-  isGameStarted: boolean;
   currentPlayerIndex: number|null;
   players: PlayerData[];
 }
 
 interface AppPropsFromDispatch {
-  onStart: () => any;
 }
 
 type AppProps = AppPropsFromState & AppPropsFromDispatch;
@@ -34,7 +32,7 @@ const PlayerContainer = styled.main`
   justify-content: space-between;
 `;
 
-const App: React.FC<AppProps> = ({ isGameStarted, currentPlayerIndex, players, onStart }) => {
+const App: React.FC<AppProps> = ({ currentPlayerIndex, players }) => {
   const playerNodeList = players.map((player, index) => (
     <Player
       key={player.name}
@@ -47,12 +45,7 @@ const App: React.FC<AppProps> = ({ isGameStarted, currentPlayerIndex, players, o
     <AppContainer>
       <Header>
         <h1>React + Redux = Bingo</h1>
-        <button
-          type="button"
-          onClick={onStart}
-        >
-          게임 {isGameStarted ? '재' : ''}시작
-        </button>
+        <ButtonStart />
       </Header>
 
       <PlayerContainer>
@@ -66,7 +59,6 @@ const App: React.FC<AppProps> = ({ isGameStarted, currentPlayerIndex, players, o
 
 function mapStateToProps(state: State): AppPropsFromState {
   return {
-    isGameStarted: state.isGameStarted,
     currentPlayerIndex: state.currentPlayerIndex,
     players: state.players,
   };
@@ -74,7 +66,6 @@ function mapStateToProps(state: State): AppPropsFromState {
 
 function mapDispatchToProps(dispatch: Dispatch): AppPropsFromDispatch {
   return {
-    onStart: () => dispatch(startGame()),
   };
 }
 
