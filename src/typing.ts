@@ -1,4 +1,4 @@
-export type BingoTable = BingoEntityData[] | null[];
+export type BingoTable = BingoEntityData[]|null[];
 
 /**
  * 플레이어 데이터 형식

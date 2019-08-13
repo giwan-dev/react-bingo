@@ -1,3 +1,5 @@
+import { BingoEntityData } from 'typing';
+
 export const START_GAME = 'START_GAME';
 export const ADD_NUMBER = 'ADD_NUMBER';
 export const RESET_GAME = 'RESET_GAME';
@@ -11,8 +13,9 @@ export type Action = ReturnType<
 /**
  * 새 게임을 시작하는 액션을 반환합니다.
  */
-export function startGame() {
+export function startGame(tables: BingoEntityData[][]) {
   return {
+    tables,
     type: START_GAME,
   } as const;
 }

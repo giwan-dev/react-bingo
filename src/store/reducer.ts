@@ -38,7 +38,7 @@ export default function rootReducer(state: State = initialState, action: Action)
       return {
         isGameStarted: true,
         currentPlayerIndex: 0,
-        players: initializePlayers(),
+        players: initializePlayers(action.tables),
       };
 
     case ADD_NUMBER:

@@ -5,9 +5,10 @@ import {
   findIndex as _findIndex,
   shuffle as _shuffle,
   chunk as _chunk,
-  sample as _sample,
   every as _every,
 } from 'lodash';
+
+const NULL_ENTITY_ERROR_MESSAGE = '빙고 테이블에 null인 entity가 존재합니다.';
 
 /**
  * 수열을 만듧니다.
@@ -29,7 +30,7 @@ const BINGO_INDEX_COMBINATION = [
 /**
  * 새로운 빙고판을 준비하는 함수
  */
-const makeNewBingo = () => _map(_shuffle(_range(25)), num => ({
+export const makeNewTable = () => _map(_shuffle(_range(25)), num => ({
   key: num + 1,
   isSelected: false,
 }));
@@ -37,38 +38,27 @@ const makeNewBingo = () => _map(_shuffle(_range(25)), num => ({
 /**
  * 새로운 플레이어 목록을 만드는 함수
  */
-export function initializePlayers(): PlayerData[] {
-  return [
-    {
-      name: 'Player 1',
-      table: makeNewBingo(),
-      matchedIndexList: [],
-      isWin: false,
-    },
-    {
-      name: 'Player 2',
-      table: makeNewBingo(),
-      matchedIndexList: [],
-      isWin: false,
-    },
-  ];
+export function initializePlayers(tables: BingoEntityData[][]): PlayerData[] {
+  return tables.map((table, index) => ({
+    table,
+    name: `Player ${index + 1}`,
+    matchedIndexList: [],
+    isWin: false,
+  }));
 }
 
 /**
  * 주어진 목록에서 선택한 숫자를 selected로 마킹한 새로운 어레이를 반환합니다.
- * @param list
- * @param selected
+ * @param table
+ * @param selectedKey
  */
-function markNewSelected(
-  list: BingoTable,
-  selected: number,
-): BingoTable {
-  if (_sample(list) === null) {
-    return list;
-  }
+function markNewSelected(table: BingoTable, selectedKey: number): BingoTable {
+  return _map(table, (entity) => {
+    if (entity === null) {
+      throw new Error(NULL_ENTITY_ERROR_MESSAGE);
+    }
 
-  return _map(list as BingoEntityData[], (entity) => { // HACK: entity가 null인 케이스 예외 처리 했다
-    if (entity !== null && entity.key === selected) {
+    if (entity.key === selectedKey) {
       return {
         key: entity.key,
         isSelected: true,
@@ -81,21 +71,27 @@ function markNewSelected(
 /**
  * 주어진 목록에서 선택한 숫자가 selected가 되었을 때 빙고가 이뤄진 조합의 목록을 반환한다.
  * 빙고 되는 index의 조합 목록에서 선택한 숫자의 index가 포함된 경우만 필터링하고, 해당 조합만 확인한다.
- * @param list
+ * @param table
  * @param selectd
  */
-function makeMatchedIndexList(list: BingoTable, selected: number): number[][] {
-  if (_sample(list) === null) {
-    return [];
-  }
-
-  const targetList = list as BingoEntityData[];
-
-  const selectedIndex = _findIndex(targetList, entity => entity.key === selected);
+function makeMatchedIndexList(table: BingoTable, selectedKey: number): number[][] {
+  const selectedIndex = _findIndex(table, (entity) => {
+    if (entity === null) {
+      throw new Error(NULL_ENTITY_ERROR_MESSAGE);
+    }
+    return entity.key === selectedKey;
+  });
 
   return BINGO_INDEX_COMBINATION
-  .filter(value => value.includes(selectedIndex))
-  .filter(combination => _every(_map(combination, index => targetList[index].isSelected)));
+    .filter(combination => combination.includes(selectedIndex)) // 선택한 인덱스가 존재하는 조합만 필터링
+    .filter(combination => _every(_map(combination, (index) => { // 모든 인덱스가 선택된 조합만 필터링
+      const target = table[index];
+
+      if (target === null) {
+        throw new Error(NULL_ENTITY_ERROR_MESSAGE);
+      }
+      return target.isSelected;
+    })));
 }
 
 /**

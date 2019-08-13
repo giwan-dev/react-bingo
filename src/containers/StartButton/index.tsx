@@ -4,6 +4,7 @@ import { Dispatch } from 'redux';
 import { startGame } from 'store/actions';
 import { connect } from 'react-redux';
 import Button from 'components/Button';
+import { makeNewTable } from 'helpers';
 
 interface StartButtonPropsFromState {
   isGameStarted: boolean;
@@ -34,7 +35,7 @@ function mapStateToProps(state: State): StartButtonPropsFromState {
 
 function mapDispatchToProps(dispatch: Dispatch): StartButtonPropsFromDispatch {
   return {
-    onClick: () => dispatch(startGame()),
+    onClick: () => dispatch(startGame([makeNewTable(), makeNewTable()])),
   };
 }
 
