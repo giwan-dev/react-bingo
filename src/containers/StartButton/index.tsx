@@ -5,17 +5,17 @@ import { startGame } from 'actions';
 import { connect } from 'react-redux';
 import Button from 'components/Button';
 
-interface ButtonStartPropsFromState {
+interface StartButtonPropsFromState {
   isGameStarted: boolean;
 
 }
-interface ButtonStartPropsFromDispatch {
+interface StartButtonPropsFromDispatch {
   onClick: () => any;
 }
 
-type ButtonStartProps = ButtonStartPropsFromState & ButtonStartPropsFromDispatch;
+type StartButtonProps = StartButtonPropsFromState & StartButtonPropsFromDispatch;
 
-const ButtonStart: React.FunctionComponent<ButtonStartProps> = ({ isGameStarted, onClick }) => {
+const StartButton: React.FunctionComponent<StartButtonProps> = ({ isGameStarted, onClick }) => {
   return (
     <Button
       type="button"
@@ -26,13 +26,13 @@ const ButtonStart: React.FunctionComponent<ButtonStartProps> = ({ isGameStarted,
   );
 };
 
-function mapStateToProps(state: State): ButtonStartPropsFromState {
+function mapStateToProps(state: State): StartButtonPropsFromState {
   return {
     isGameStarted: state.isGameStarted,
   };
 }
 
-function mapDispatchToProps(dispatch: Dispatch): ButtonStartPropsFromDispatch {
+function mapDispatchToProps(dispatch: Dispatch): StartButtonPropsFromDispatch {
   return {
     onClick: () => dispatch(startGame()),
   };
@@ -40,4 +40,4 @@ function mapDispatchToProps(dispatch: Dispatch): ButtonStartPropsFromDispatch {
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default withConnect(ButtonStart);
+export default withConnect(StartButton);

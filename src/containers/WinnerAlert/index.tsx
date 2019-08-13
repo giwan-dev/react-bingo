@@ -5,18 +5,18 @@ import { Dispatch } from 'redux';
 import { resetGame } from 'actions';
 import { connect } from 'react-redux';
 
-interface AlertWinnerPropsFromState {
+interface WinnerAlertPropsFromState {
   isVisible: boolean;
   winnerName: string|null; // null이면 승자가 없음
 }
 
-interface AlertWinnerPropsFromDispatch {
+interface WinnerAlertPropsFromDispatch {
   onConfirm: () => any;
 }
 
-type AlertWinnerProps = AlertWinnerPropsFromState & AlertWinnerPropsFromDispatch;
+type WinnerAlertProps = WinnerAlertPropsFromState & WinnerAlertPropsFromDispatch;
 
-const AlertWinner: React.FunctionComponent<AlertWinnerProps> = ({ isVisible, winnerName, onConfirm }) => {
+const WinnerAlert: React.FunctionComponent<WinnerAlertProps> = ({ isVisible, winnerName, onConfirm }) => {
   return (
     <Alert
       isVisible={isVisible}
@@ -26,7 +26,7 @@ const AlertWinner: React.FunctionComponent<AlertWinnerProps> = ({ isVisible, win
   );
 };
 
-function mapStateToProps(state: State): AlertWinnerPropsFromState {
+function mapStateToProps(state: State): WinnerAlertPropsFromState {
   const winners = state.players.filter(player => player.isWin);
 
   if (winners.length === 0) {
@@ -42,7 +42,7 @@ function mapStateToProps(state: State): AlertWinnerPropsFromState {
   };
 }
 
-function mapDispatchToProps(dispatch: Dispatch): AlertWinnerPropsFromDispatch {
+function mapDispatchToProps(dispatch: Dispatch): WinnerAlertPropsFromDispatch {
   return {
     onConfirm: () => dispatch(resetGame()),
   };
@@ -50,4 +50,4 @@ function mapDispatchToProps(dispatch: Dispatch): AlertWinnerPropsFromDispatch {
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default withConnect(AlertWinner);
+export default withConnect(WinnerAlert);

@@ -5,8 +5,8 @@ import { State } from 'reducers';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { PlayerData } from 'typing';
-import AlertWinner from 'containers/AlertWinner';
-import ButtonStart from 'containers/ButtonStart';
+import WinnerAlert from 'containers/WinnerAlert';
+import StartButton from 'containers/StartButton';
 
 interface AppPropsFromState {
   currentPlayerIndex: number|null;
@@ -45,14 +45,14 @@ const App: React.FC<AppProps> = ({ currentPlayerIndex, players }) => {
     <AppContainer>
       <Header>
         <h1>React + Redux = Bingo</h1>
-        <ButtonStart />
+        <StartButton />
       </Header>
 
       <PlayerContainer>
         {playerNodeList}
       </PlayerContainer>
 
-      <AlertWinner />
+      <WinnerAlert />
     </AppContainer>
   );
 };
