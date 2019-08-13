@@ -1,7 +1,7 @@
 import React from 'react';
 import Player from 'containers/Player';
 import styled from 'styled-components';
-import { State } from 'reducers';
+import { State } from 'store/reducer';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { PlayerData } from 'typing';

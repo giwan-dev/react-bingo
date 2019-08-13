@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { State } from 'reducers';
+import { State } from 'store/reducer';
 import Alert from 'components/Alert';
 import { Dispatch } from 'redux';
-import { resetGame } from 'actions';
+import { resetGame } from 'store/actions';
 import { connect } from 'react-redux';
 
 interface WinnerAlertPropsFromState {

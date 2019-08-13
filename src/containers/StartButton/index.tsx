@@ -1,7 +1,7 @@
 import React from 'react';
-import { State } from 'reducers';
+import { State } from 'store/reducer';
 import { Dispatch } from 'redux';
-import { startGame } from 'actions';
+import { startGame } from 'store/actions';
 import { connect } from 'react-redux';
 import Button from 'components/Button';
 

@@ -1,11 +1,11 @@
 import { Action, ADD_NUMBER, START_GAME, RESET_GAME } from './actions';
-import { PlayerData } from './typing';
+import { PlayerData } from '../typing';
 import {
   fill as _fill,
   map as _map,
   some as _some,
 } from 'lodash';
-import { initializePlayers, makeNewPlayerMapper } from './helpers';
+import { initializePlayers, makeNewPlayerMapper } from '../helpers';
 
 export interface State {
   isGameStarted: boolean;
