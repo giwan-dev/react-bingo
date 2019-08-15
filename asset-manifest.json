@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.js": "/react-bingo/static/js/main.fa1cdd8a.chunk.js",
-    "main.js.map": "/react-bingo/static/js/main.fa1cdd8a.chunk.js.map",
+    "main.js": "/react-bingo/static/js/main.d2825d17.chunk.js",
+    "main.js.map": "/react-bingo/static/js/main.d2825d17.chunk.js.map",
     "runtime~main.js": "/react-bingo/static/js/runtime~main.36f22ad7.js",
     "runtime~main.js.map": "/react-bingo/static/js/runtime~main.36f22ad7.js.map",
-    "static/js/2.b3bce1e5.chunk.js": "/react-bingo/static/js/2.b3bce1e5.chunk.js",
-    "static/js/2.b3bce1e5.chunk.js.map": "/react-bingo/static/js/2.b3bce1e5.chunk.js.map",
+    "static/js/2.75ecbef7.chunk.js": "/react-bingo/static/js/2.75ecbef7.chunk.js",
+    "static/js/2.75ecbef7.chunk.js.map": "/react-bingo/static/js/2.75ecbef7.chunk.js.map",
     "index.html": "/react-bingo/index.html",
-    "precache-manifest.ee665318600d6c8f071f2a400a5e5cec.js": "/react-bingo/precache-manifest.ee665318600d6c8f071f2a400a5e5cec.js",
+    "precache-manifest.72781076e6789007bcdf4606f840f65a.js": "/react-bingo/precache-manifest.72781076e6789007bcdf4606f840f65a.js",
     "service-worker.js": "/react-bingo/service-worker.js"
   }
 }
