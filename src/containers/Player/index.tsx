@@ -1,14 +1,14 @@
 import React from 'react';
 import { chunk as _chunk, map as _map, sample as _sample } from 'lodash';
 import styled from 'styled-components';
-import { PlayerData, BingoEntityData } from 'typing';
-import { State } from 'store/reducer';
+import { BingoTable } from 'typing';
+import { RootState } from 'store/reducer';
 import { Dispatch } from 'redux';
-import { addNumber } from 'store/actions';
 import { connect } from 'react-redux';
 import bind from 'bind-decorator';
 import Alert from 'components/Alert';
 import COLOR from 'colors';
+import { selectNumber } from 'store/gameStatus/actions';
 
 interface PlayerPropsFromState {
 
@@ -20,7 +20,9 @@ interface PlayerPropsFromDispatch {
 
 interface PlayerProps extends PlayerPropsFromState, PlayerPropsFromDispatch {
   isActive: boolean;
-  player: PlayerData;
+  name: string;
+  table: BingoTable|null[];
+  matchedIndexList: number[][];
 }
 
 interface PlayerState {
@@ -98,8 +100,8 @@ class Player extends React.Component<PlayerProps, PlayerState> {
    */
   @bind
   private handleTdErrorClick() {
-    const { isActive, player } = this.props;
-    if (_sample(player.table) !== null && !isActive) {
+    const { isActive, table } = this.props;
+    if (_sample(table) !== null && !isActive) {
       this.setState({
         isAlertVisible: true,
       });
@@ -120,26 +122,35 @@ class Player extends React.Component<PlayerProps, PlayerState> {
    * 보드판 행, 열을 렌더링합니다.
    */
   private renderTableRows() {
-    const { isActive, player } = this.props;
+    const { isActive, table } = this.props;
 
     return _map(
-      _chunk(player.table, 5),
+      _chunk(table, 5),
       (row, rowIndex) => {
         const entityList = _map(row, (entity, columnIndex) => {
-          const selectable = entity !== null && isActive && !entity.isSelected;
+          if (entity === null) {
+            return (
+              <Td
+                key={`${rowIndex}-${columnIndex}`}
+                disabled={true}
+                selected={false}
+              />
+            );
+          }
+
+          const selectable = isActive && !entity.isSelected;
           const onClickHandler = selectable
-            // HACK: selectable에 null 아닌거 들어가므로 보장됨
-            ? this.makeTdClickHandler((entity as BingoEntityData).key)
+            ? this.makeTdClickHandler(entity.key)
             : this.handleTdErrorClick;
 
           return (
             <Td
               key={`${rowIndex}-${columnIndex}`}
               disabled={!selectable}
-              selected={entity !== null && entity.isSelected}
+              selected={entity.isSelected}
               onClick={onClickHandler}
             >
-              {entity !== null ? entity.key : ''}
+              {entity.key}
             </Td>
           );
         });
@@ -157,7 +168,7 @@ class Player extends React.Component<PlayerProps, PlayerState> {
    * 빙고 맞춘 조합 목록을 렌더링합니다.
    */
   private renderMatchedCombinationList() {
-    const { table, matchedIndexList } = this.props.player;
+    const { table, matchedIndexList } = this.props;
 
     return _map(
       _map(
@@ -176,13 +187,13 @@ class Player extends React.Component<PlayerProps, PlayerState> {
   }
 
   public render() {
-    const { player, isActive } = this.props;
+    const { isActive, name } = this.props;
     const { isAlertVisible } = this.state;
 
     return (
       <Container disabled={!isActive}>
         <PlayerName highlight={isActive}>
-          {player.name}
+          {name}
         </PlayerName>
 
         <TableContainer highlight={isActive}>
@@ -210,7 +221,7 @@ class Player extends React.Component<PlayerProps, PlayerState> {
   }
 }
 
-function mapStateToProps(state: State): PlayerPropsFromState {
+function mapStateToProps(state: RootState): PlayerPropsFromState {
   return {
 
   };
@@ -218,7 +229,7 @@ function mapStateToProps(state: State): PlayerPropsFromState {
 
 function mapDispatchToProps(dispatch: Dispatch): PlayerPropsFromDispatch {
   return {
-    onSelectNumber: num => dispatch(addNumber(num)),
+    onSelectNumber: num => dispatch(selectNumber(num)),
   };
 }
 

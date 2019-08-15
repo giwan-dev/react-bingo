@@ -1,69 +1,17 @@
-import { Action, ADD_NUMBER, START_GAME, RESET_GAME } from './actions';
-import { PlayerData } from '../typing';
-import {
-  fill as _fill,
-  map as _map,
-  some as _some,
-} from 'lodash';
-import { initializePlayers, makeNewPlayerMapper } from '../helpers';
+import gameStatusReducer, { GameStatusState } from './gameStatus/reducer';
+import playersReducer, { PlayersState } from './players/reducer';
+import { combineReducers } from 'redux';
 
-export interface State {
-  isGameStarted: boolean;
-  currentPlayerIndex: number|null;
-  players: PlayerData[];
+export interface RootState {
+  gameStatus: GameStatusState;
+  players: PlayersState;
 }
 
-const initialState: State = {
-  isGameStarted: false,
-  currentPlayerIndex: null,
-  players: [
-    {
-      name: 'Player 1',
-      table: _fill(Array(25), null),
-      matchedIndexList: [],
-      isWin: false,
-    },
-    {
-      name: 'Player 2',
-      table: _fill(Array(25), null),
-      matchedIndexList: [],
-      isWin: false,
-    },
-  ],
+const reducers = {
+  gameStatus: gameStatusReducer,
+  players: playersReducer,
 };
 
-export default function rootReducer(state: State = initialState, action: Action): State {
-  switch (action.type) {
-    case START_GAME:
-      return {
-        isGameStarted: true,
-        currentPlayerIndex: 0,
-        players: initializePlayers(action.tables),
-      };
+const rootReducer = combineReducers(reducers);
 
-    case ADD_NUMBER:
-      if (state.currentPlayerIndex === null) {
-        return {
-          ...state,
-          currentPlayerIndex: 0,
-        };
-      }
-
-      const nextPlayerIndex = state.currentPlayerIndex + 1 === state.players.length
-        ? 0
-        : state.currentPlayerIndex + 1;
-      const newPlayers = _map(state.players, makeNewPlayerMapper(action.num));
-
-      return {
-        ...state,
-        currentPlayerIndex: _some(newPlayers, player => player.isWin)
-          ? null
-          : nextPlayerIndex,
-        players: newPlayers,
-      };
-    case RESET_GAME:
-      return initialState;
-    default:
-      return state;
-  }
-}
+export default rootReducer;

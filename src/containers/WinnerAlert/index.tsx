@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { State } from 'store/reducer';
+import { RootState } from 'store/reducer';
 import Alert from 'components/Alert';
 import { Dispatch } from 'redux';
-import { resetGame } from 'store/actions';
 import { connect } from 'react-redux';
+import { resetGame } from 'store/gameStatus/actions';
+import { createStructuredSelector } from 'reselect';
+import { makeSelectWinnerName, makeSelectWinnerExist } from 'store/players/selectors';
 
 interface WinnerAlertPropsFromState {
   isVisible: boolean;
@@ -26,21 +28,10 @@ const WinnerAlert: React.FunctionComponent<WinnerAlertProps> = ({ isVisible, win
   );
 };
 
-function mapStateToProps(state: State): WinnerAlertPropsFromState {
-  const winners = state.players.filter(player => player.isWin);
-
-  if (winners.length === 0) {
-    return {
-      isVisible: false,
-      winnerName: null,
-    };
-  }
-
-  return {
-    isVisible: true,
-    winnerName: winners.length > 1 ? null : winners[0].name,
-  };
-}
+const mapStateToProps = createStructuredSelector<RootState, WinnerAlertPropsFromState>({
+  isVisible: makeSelectWinnerExist(),
+  winnerName: makeSelectWinnerName(),
+});
 
 function mapDispatchToProps(dispatch: Dispatch): WinnerAlertPropsFromDispatch {
   return {

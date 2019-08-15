@@ -1,15 +1,17 @@
 export type PlayersAction = ReturnType<
-  typeof addNumber |
+  typeof addPlayer |
   typeof resetPlayers
 >;
 
-export const ADD_NUMBER = 'ADD_NUMBER';
+export const ADD_PLAYER = 'ADD_PLAYER';
 export const RESET_PLAYERS = 'RESET_PLAYERS';
 
-export function addNumber(num: number) {
+export function addPlayer(id: string, name: string, table: number[]) {
   return {
-    num,
-    type: ADD_NUMBER,
+    id,
+    name,
+    table,
+    type: ADD_PLAYER,
   } as const;
 }
 

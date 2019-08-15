@@ -1,15 +1,16 @@
 import React from 'react';
-import { State } from 'store/reducer';
+import { RootState } from 'store/reducer';
 import { Dispatch } from 'redux';
-import { startGame } from 'store/actions';
 import { connect } from 'react-redux';
 import Button from 'components/Button';
-import { makeNewTable } from 'helpers';
+import { createStructuredSelector } from 'reselect';
+import { makeSelectIsGameStarted } from 'store/gameStatus/selectors';
+import { startGame } from 'store/gameStatus/actions';
 
 interface StartButtonPropsFromState {
   isGameStarted: boolean;
-
 }
+
 interface StartButtonPropsFromDispatch {
   onClick: () => any;
 }
@@ -27,15 +28,13 @@ const StartButton: React.FunctionComponent<StartButtonProps> = ({ isGameStarted,
   );
 };
 
-function mapStateToProps(state: State): StartButtonPropsFromState {
-  return {
-    isGameStarted: state.isGameStarted,
-  };
-}
+const mapStateToProps = createStructuredSelector<RootState, StartButtonPropsFromState>({
+  isGameStarted: makeSelectIsGameStarted(),
+});
 
 function mapDispatchToProps(dispatch: Dispatch): StartButtonPropsFromDispatch {
   return {
-    onClick: () => dispatch(startGame([makeNewTable(), makeNewTable()])),
+    onClick: () => dispatch(startGame()),
   };
 }
 

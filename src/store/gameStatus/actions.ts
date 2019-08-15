@@ -1,31 +1,37 @@
-import { BingoEntityData } from 'typing';
-
 export type GameStatusAction = ReturnType<
   typeof startGame |
-  typeof updateCurrentPlayerIndex |
-  typeof resetGameStatus
+  typeof resetGame |
+  typeof updateCurrentPlayerId |
+  typeof selectNumber
 >;
 
 export const START_GAME = 'START_GAME';
-export const UPDATE_CURRENT_PLAYER_INDEX = 'UPDATE_CURRENT_PLAYER_INDEX';
-export const RESET_GAME_STATUS = 'RESET_GAME_STATUS';
+export const RESET_GAME = 'RESET_GAME';
+export const UPDATE_CURRENT_PLAYER_ID = 'UPDATE_CURRENT_PLAYER_ID';
+export const SELECT_NUMBER = 'SELECT_NUMBER';
 
-export function startGame(tables: BingoEntityData[][]) {
+export function startGame() {
   return {
-    tables,
     type: START_GAME,
   } as const;
 }
 
-export function updateCurrentPlayerIndex(index: number) {
+export function resetGame() {
   return {
-    index,
-    type: UPDATE_CURRENT_PLAYER_INDEX,
+    type: RESET_GAME,
   } as const;
 }
 
-export function resetGameStatus() {
+export function updateCurrentPlayerId(id: string) {
   return {
-    type: RESET_GAME_STATUS,
+    id,
+    type: UPDATE_CURRENT_PLAYER_ID,
+  } as const;
+}
+
+export function selectNumber(num: number) {
+  return {
+    num,
+    type: SELECT_NUMBER,
   } as const;
 }

@@ -1,28 +1,36 @@
-import { GameStatusAction, START_GAME, UPDATE_CURRENT_PLAYER_INDEX, RESET_GAME_STATUS } from './actions';
+import { GameStatusAction, UPDATE_CURRENT_PLAYER_ID, RESET_GAME, SELECT_NUMBER, START_GAME } from './actions';
 
 export interface GameStatusState {
-  isGameStarted: boolean;
-  currentPlayerIndex: number|null;
+  currentPlayerId: string|null;
+  selectedNumbers: number[];
 }
 
 const initialState: GameStatusState = {
-  isGameStarted: false,
-  currentPlayerIndex: null,
+  currentPlayerId: null,
+  selectedNumbers: [],
 };
 
 export default function gameStatusReducer(state: GameStatusState = initialState, action: GameStatusAction): GameStatusState {
   switch (action.type) {
     case START_GAME:
       return {
-        isGameStarted: true,
-        currentPlayerIndex: 0,
+        ...state,
+        selectedNumbers: [],
       };
-    case UPDATE_CURRENT_PLAYER_INDEX:
+    case UPDATE_CURRENT_PLAYER_ID:
       return {
         ...state,
-        currentPlayerIndex: action.index,
+        currentPlayerId: action.id,
       };
-    case RESET_GAME_STATUS:
+    case SELECT_NUMBER:
+      return {
+        ...state,
+        selectedNumbers: [
+          ...state.selectedNumbers,
+          action.num,
+        ],
+      };
+    case RESET_GAME:
       return initialState;
     default:
       return state;

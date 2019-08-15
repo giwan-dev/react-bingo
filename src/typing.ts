@@ -1,9 +1,9 @@
-export type BingoTable = BingoEntityData[]|null[];
-
+export type BingoTable = BingoEntityData[];
 /**
  * 플레이어 데이터 형식
  */
 export interface PlayerData {
+  id: string;
   name: string;
   table: BingoTable;
   matchedIndexList: number[][];
