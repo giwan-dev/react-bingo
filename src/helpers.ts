@@ -51,6 +51,5 @@ export function makePlayerData(player: PlayerStateValue, selectedNumbers: number
     id: player.id,
     name: player.name,
     table: bingoTable,
-    isWin: matchedIndexList.length >= 5,
   };
 }
