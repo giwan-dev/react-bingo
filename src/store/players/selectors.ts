@@ -2,25 +2,35 @@ import { createSelector } from 'reselect';
 import { RootState } from '../reducer';
 import { initialPlayersState } from './reducer';
 import { selectSelectedNumbers } from 'store/gameStatus/selectors';
-import { makePlayerData, makeMatchedIndexList } from 'helpers';
+import { makeBingoTable } from 'helpers';
 import { map as _map, filter as _filter } from 'lodash';
+import { selectMathcedCombinationById } from 'store/matchedCombination/selectors';
 
 const selectPlayersState = (state: RootState) => state.players || initialPlayersState;
 
 const selectByIds = createSelector(selectPlayersState, state => state.byIds);
 const selectAllIds = createSelector(selectPlayersState, state => state.allIds);
 
-const selectWinners = createSelector(selectByIds, selectSelectedNumbers, (byIds, selectedNumbers) => _map(
+const selectWinners = createSelector(selectByIds, selectMathcedCombinationById, (byIds, combinations) => _map(
   _filter(
     byIds,
-    (player) => {
-      return makeMatchedIndexList(player.table, selectedNumbers).length >= 5;
-    },
+    player => _filter(combinations, combination => combination.playerId === player.id).length >= 5,
   ),
   player => player,
 ));
 
-const makeSelectEveryPlayerData = () => createSelector(selectByIds, selectSelectedNumbers, (players, numbers) => _map(players, player => makePlayerData(player, numbers)));
+const makeSelectPlayer = (id: string) => createSelector(selectByIds, players => players[id]);
+const makeSelectPlayerTable = (id: string) => createSelector(makeSelectPlayer(id), player => player.table);
+
+const makeSelectEveryPlayerData = () => createSelector(selectByIds, selectSelectedNumbers, selectMathcedCombinationById, (players, numbers, combinations) => _map(players, player => ({
+  id: player.id,
+  name: player.name,
+  table: makeBingoTable(player.table, numbers),
+  matchedIndexList: _map(
+    _filter(combinations, combination => combination.playerId === player.id),
+    combination => combination.combination,
+  ),
+})));
 
 const makeSelectWinnerExist = () => createSelector(selectWinners, winners => winners.length > 0);
 const makeSelectWinnerName = () => createSelector(selectWinners, (winners) => {
@@ -32,6 +42,7 @@ const makeSelectWinnerName = () => createSelector(selectWinners, (winners) => {
 
 export {
   selectAllIds,
+  makeSelectPlayerTable,
   makeSelectEveryPlayerData,
   makeSelectWinnerExist,
   makeSelectWinnerName,

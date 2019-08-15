@@ -23,6 +23,7 @@ export default function playersReducer(state: PlayersState = initialPlayersState
   switch (action.type) {
     case ADD_PLAYER:
       return {
+        ...state,
         byIds: {
           ...state.byIds,
           [action.id]: {
@@ -35,6 +36,7 @@ export default function playersReducer(state: PlayersState = initialPlayersState
       };
     case RESET_PLAYERS:
       return initialPlayersState;
+
     default:
       return state;
   }
