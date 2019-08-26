@@ -13,6 +13,7 @@ const makeSelectCurrentPlayerId = () => createSelector(selectGameStatusState, st
 const makeSelectIsGameStarted = () => createSelector(makeSelectCurrentPlayerId(), currentPlayerId => currentPlayerId !== null);
 
 export {
+  selectGameStatusState,
   selectSelectedNumbers,
 
   makeSelectIsGameStarted,
