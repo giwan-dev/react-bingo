@@ -41,7 +41,12 @@ const makeSelectWinnerName = () => createSelector(selectWinners, (winners) => {
 });
 
 export {
+  selectPlayersState,
+  selectByIds,
   selectAllIds,
+  selectWinners,
+
+  makeSelectPlayer,
   makeSelectPlayerTable,
   makeSelectEveryPlayerData,
   makeSelectWinnerExist,
