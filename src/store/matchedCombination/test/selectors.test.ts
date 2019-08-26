@@ -1,5 +1,5 @@
 import { RootState } from '../../reducer';
-import { selectMatchedCombinationState, selectMathcedCombinationById } from '../selectors';
+import { selectMatchedCombinationState, selectMatchedCombinationById } from '../selectors';
 import { MatchedCombinationState } from '../reducer';
 
 describe('Matched combination selectors', () => {
@@ -52,7 +52,7 @@ describe('Matched combination selectors', () => {
       allIds: ['1'],
     };
 
-    expect(selectMathcedCombinationById.resultFunc(state)).toEqual({
+    expect(selectMatchedCombinationById.resultFunc(state)).toEqual({
       // tslint:disable-next-line: object-literal-key-quotes
       '1': {
         id: '1',

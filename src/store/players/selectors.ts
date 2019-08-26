@@ -4,14 +4,14 @@ import { initialPlayersState } from './reducer';
 import { selectSelectedNumbers } from 'store/gameStatus/selectors';
 import { makeBingoTable } from 'helpers';
 import { map as _map, filter as _filter } from 'lodash';
-import { selectMathcedCombinationById } from 'store/matchedCombination/selectors';
+import { selectMatchedCombinationById } from 'store/matchedCombination/selectors';
 
 const selectPlayersState = (state: RootState) => state.players || initialPlayersState;
 
 const selectByIds = createSelector(selectPlayersState, state => state.byIds);
 const selectAllIds = createSelector(selectPlayersState, state => state.allIds);
 
-const selectWinners = createSelector(selectByIds, selectMathcedCombinationById, (byIds, combinations) => _map(
+const selectWinners = createSelector(selectByIds, selectMatchedCombinationById, (byIds, combinations) => _map(
   _filter(
     byIds,
     player => _filter(combinations, combination => combination.playerId === player.id).length >= 5,
@@ -22,7 +22,7 @@ const selectWinners = createSelector(selectByIds, selectMathcedCombinationById, 
 const makeSelectPlayer = (id: string) => createSelector(selectByIds, players => players[id]);
 const makeSelectPlayerTable = (id: string) => createSelector(makeSelectPlayer(id), player => player.table);
 
-const makeSelectEveryPlayerData = () => createSelector(selectByIds, selectSelectedNumbers, selectMathcedCombinationById, (players, numbers, combinations) => _map(players, player => ({
+const makeSelectEveryPlayerData = () => createSelector(selectByIds, selectSelectedNumbers, selectMatchedCombinationById, (players, numbers, combinations) => _map(players, player => ({
   id: player.id,
   name: player.name,
   table: makeBingoTable(player.table, numbers),
