@@ -10,11 +10,14 @@ interface AlertProps {
   onConfirm: React.MouseEventHandler<HTMLElement>;
 }
 
-const alertPortal = document.getElementById('alert-portal');
+const alertPortal = document.getElementById('alert-portal') || {
+  appendChild: () => {},
+  removeChild: () => {},
+};
 export const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
 export default class Alert extends React.Component<AlertProps> {
-  el: HTMLElement|null = null;
+  private el: HTMLElement;
 
   constructor(props: AlertProps) {
     super(props);
@@ -23,16 +26,11 @@ export default class Alert extends React.Component<AlertProps> {
   }
 
   componentDidMount() {
-    if (alertPortal !== null && this.el !== null) {
-      alertPortal.appendChild(this.el);
-    }
-
+    alertPortal.appendChild(this.el);
   }
 
   componentWillUnmount() {
-    if (alertPortal !== null && this.el !== null) {
-      alertPortal.removeChild(this.el);
-    }
+    alertPortal.removeChild(this.el);
   }
 
   private renderAlert() {
