@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import styled from 'styled-components';
 import Button from '../Button';
+import AlertOverlay from './Overlay';
+import AlertWrapper from './Wrapper';
 
 interface AlertProps {
   isVisible: boolean;
@@ -9,33 +10,8 @@ interface AlertProps {
   onConfirm: React.MouseEventHandler<HTMLElement>;
 }
 
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-`;
-
-const AlertContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin: auto;
-  width: 500px;
-  height: 80px;
-  border-radius: 5px;
-  padding: 20px;
-  background-color: white;
-  transform: translate(-50%, -50%);
-`;
-
 const alertPortal = document.getElementById('alert-portal');
-const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
+export const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
 export default class Alert extends React.Component<AlertProps> {
   el: HTMLElement|null = null;
@@ -67,8 +43,8 @@ export default class Alert extends React.Component<AlertProps> {
     }
 
     return (
-      <Overlay onClick={onConfirm}>
-        <AlertContainer onClick={stopPropagation}>
+      <AlertOverlay onClick={onConfirm}>
+        <AlertWrapper onClick={stopPropagation}>
           {message}
           <Button
             type="button"
@@ -76,8 +52,8 @@ export default class Alert extends React.Component<AlertProps> {
           >
             확인
           </Button>
-        </AlertContainer>
-      </Overlay>
+        </AlertWrapper>
+      </AlertOverlay>
     );
   }
 
