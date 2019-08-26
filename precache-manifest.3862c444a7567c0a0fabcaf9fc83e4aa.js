@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "cee6a21c3eb5d9457cf017e25d4d781d",
+    "revision": "5a7a3065e368865f2a007e2b3afef57f",
     "url": "/react-bingo/index.html"
   },
   {
@@ -8,8 +8,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/react-bingo/static/js/2.75ecbef7.chunk.js"
   },
   {
-    "revision": "1ec3643c7e13742113e4",
-    "url": "/react-bingo/static/js/main.d2825d17.chunk.js"
+    "revision": "5f578710cad38cbb49bb",
+    "url": "/react-bingo/static/js/main.296fe41d.chunk.js"
   },
   {
     "revision": "1f70a92c7d62d12b28c4",
