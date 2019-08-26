@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import Button from './Button';
+import Button from '../Button';
 
 interface AlertProps {
   isVisible: boolean;
