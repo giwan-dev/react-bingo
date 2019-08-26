@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Alert component should not render when isVisible is false 1`] = `
+<Portal
+  containerInfo={<div />}
+/>
+`;
+
+exports[`Alert component should render without crashing 1`] = `
+<Portal
+  containerInfo={<div />}
+>
+  <styled.div
+    onClick={[MockFunction]}
+  >
+    <styled.div
+      onClick={[Function]}
+    >
+      hello, world
+      <styled.button
+        onClick={[MockFunction]}
+        type="button"
+      >
+        확인
+      </styled.button>
+    </styled.div>
+  </styled.div>
+</Portal>
+`;
