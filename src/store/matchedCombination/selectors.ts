@@ -7,5 +7,6 @@ const selectMatchedCombinationState = (state: RootState) => state.matchedCombina
 const selectMathcedCombinationById = createSelector(selectMatchedCombinationState, state => state.byIds);
 
 export {
+  selectMatchedCombinationState,
   selectMathcedCombinationById,
 };
